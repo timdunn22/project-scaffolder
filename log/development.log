@@ -1,0 +1,290 @@
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-01-13 20:31:48.139796', '2026-01-13 20:31:48.139798') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+Migrating to CreateUsers (20260113203124)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203124') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+Migrating to CreateTemplates (20260113203125)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "file_structure" json, "user_id" integer NOT NULL, "is_public" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_68700cea77"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203125') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+Migrating to CreateGeneratedProjects (20260113203126)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "template_id" integer NOT NULL, "user_id" integer NOT NULL, "config_choices" json, "download_count" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+, CONSTRAINT "fk_rails_4fcace6360"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203126') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.3ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'React + Vite' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.6ms)[0m  [1m[32mINSERT INTO "templates" ("name", "description", "file_structure", "user_id", "is_public", "created_at", "updated_at") VALUES ('React + Vite', 'Modern React application with Vite build tool and Tailwind CSS', '{"package.json":"{\"name\": \"{{project_name}}\", \"version\": \"1.0.0\", \"scripts\": {\"dev\": \"vite\", \"build\": \"vite build\"}}","vite.config.js":"import { defineConfig } from \"vite\"\\nimport react from \"@vitejs/plugin-react\"\\nexport default defineConfig({ plugins: [react()] })","index.html":"<!DOCTYPE html><html><head><title>{{project_name}}</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.jsx\"></script></body></html>","src":{"main.jsx":"import React from \"react\"\\nimport ReactDOM from \"react-dom/client\"\\nimport App from \"./App\"\\nReactDOM.createRoot(document.getElementById(\"root\")).render(<App />)","App.jsx":"export default function App() { return <h1>Hello {{project_name}}!</h1> }"}}', NULL, TRUE, '2026-01-13 20:33:26.782687', '2026-01-13 20:33:26.782687') RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "email" varchar, "password_digest" varchar, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "agenerated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_user_id" ON "agenerated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_template_id" ON "agenerated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "agenerated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "generated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "agenerated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_user_id" ON "agenerated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_template_id" ON "agenerated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "agenerated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+, CONSTRAINT "fk_rails_4fcace6360"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "generated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "atemplates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_atemplates_on_user_id" ON "atemplates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "atemplates" ("id","created_at","description","file_structure","is_public","name","updated_at","user_id")
+                     SELECT "id","created_at","description","file_structure","is_public","name","updated_at","user_id" FROM "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_68700cea77"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "templates" ("id","created_at","description","file_structure","is_public","name","updated_at","user_id")
+                     SELECT "id","created_at","description","file_structure","is_public","name","updated_at","user_id" FROM "atemplates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "atemplates" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260113203126) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260113203125),
+(20260113203124); /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-01-13 20:33:51.625241', '2026-01-13 20:33:51.625242') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'schema_sha1' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', '7d3c3bc745d2a2fa46ee28a7136036dd7de72152', '2026-01-13 20:33:51.626702', '2026-01-13 20:33:51.626703') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.1ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'React + Vite' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.1ms)[0m  [1m[32mINSERT INTO "templates" ("created_at", "description", "file_structure", "is_public", "name", "updated_at", "user_id") VALUES ('2026-01-13 20:33:51.683225', 'Modern React application with Vite build tool and Tailwind CSS', '{"package.json":"{\"name\": \"{{project_name}}\", \"version\": \"1.0.0\", \"scripts\": {\"dev\": \"vite\", \"build\": \"vite build\"}}","vite.config.js":"import { defineConfig } from \"vite\"\\nimport react from \"@vitejs/plugin-react\"\\nexport default defineConfig({ plugins: [react()] })","index.html":"<!DOCTYPE html><html><head><title>{{project_name}}</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.jsx\"></script></body></html>","src":{"main.jsx":"import React from \"react\"\\nimport ReactDOM from \"react-dom/client\"\\nimport App from \"./App\"\\nReactDOM.createRoot(document.getElementById(\"root\")).render(<App />)","App.jsx":"export default function App() { return <h1>Hello {{project_name}}!</h1> }"}}', TRUE, 'React + Vite', '2026-01-13 20:33:51.683225', NULL) RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "email" varchar, "password_digest" varchar, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "agenerated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_user_id" ON "agenerated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_template_id" ON "agenerated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "agenerated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "generated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "agenerated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_user_id" ON "agenerated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_agenerated_projects_on_template_id" ON "agenerated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "agenerated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "generated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "config_choices" json, "created_at" datetime(6) NOT NULL, "download_count" integer, "template_id" integer NOT NULL, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+, CONSTRAINT "fk_rails_4fcace6360"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "generated_projects" ("id","config_choices","created_at","download_count","template_id","updated_at","user_id")
+                     SELECT "id","config_choices","created_at","download_count","template_id","updated_at","user_id" FROM "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "agenerated_projects" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TEMPORARY TABLE "atemplates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_atemplates_on_user_id" ON "atemplates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "atemplates" ("id","created_at","description","file_structure","is_public","name","updated_at","user_id")
+                     SELECT "id","created_at","description","file_structure","is_public","name","updated_at","user_id" FROM "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "templates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "description" text, "file_structure" json, "is_public" boolean, "name" varchar, "updated_at" datetime(6) NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "fk_rails_68700cea77"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "templates" ("id","created_at","description","file_structure","is_public","name","updated_at","user_id")
+                     SELECT "id","created_at","description","file_structure","is_public","name","updated_at","user_id" FROM "atemplates" /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "atemplates" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260113203126) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260113203125),
+(20260113203124); /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-01-13 20:36:03.084511', '2026-01-13 20:36:03.084512') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'schema_sha1' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', '7d3c3bc745d2a2fa46ee28a7136036dd7de72152', '2026-01-13 20:36:03.085619', '2026-01-13 20:36:03.085620') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.1ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'React + Vite' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.2ms)[0m  [1m[32mINSERT INTO "templates" ("created_at", "description", "file_structure", "is_public", "name", "updated_at", "user_id") VALUES ('2026-01-13 20:36:03.132311', 'Modern React application with Vite build tool and Tailwind CSS', '{"package.json":"{\"name\": \"{{project_name}}\", \"version\": \"1.0.0\", \"scripts\": {\"dev\": \"vite\", \"build\": \"vite build\"}}","vite.config.js":"import { defineConfig } from \"vite\"\\nimport react from \"@vitejs/plugin-react\"\\nexport default defineConfig({ plugins: [react()] })","index.html":"<!DOCTYPE html><html><head><title>{{project_name}}</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.jsx\"></script></body></html>","src":{"main.jsx":"import React from \"react\"\\nimport ReactDOM from \"react-dom/client\"\\nimport App from \"./App\"\\nReactDOM.createRoot(document.getElementById(\"root\")).render(<App />)","App.jsx":"export default function App() { return <h1>Hello {{project_name}}!</h1> }"}}', TRUE, 'React + Vite', '2026-01-13 20:36:03.132311', NULL) RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-01-13 20:36:12.626916', '2026-01-13 20:36:12.626918') RETURNING "key" /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+Migrating to CreateUsers (20260113203124)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203124') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+Migrating to CreateTemplates (20260113203125)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "templates" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "file_structure" json, "user_id" integer, "is_public" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_68700cea77"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_templates_on_user_id" ON "templates" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203125') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+Migrating to CreateGeneratedProjects (20260113203126)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "generated_projects" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "template_id" integer NOT NULL, "user_id" integer NOT NULL, "config_choices" json, "download_count" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3047298afe"
+FOREIGN KEY ("template_id")
+  REFERENCES "templates" ("id")
+, CONSTRAINT "fk_rails_4fcace6360"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_template_id" ON "generated_projects" ("template_id") /*application='ProjectScaffolder'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_generated_projects_on_user_id" ON "generated_projects" ("user_id") /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260113203126') RETURNING "version" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.1ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'React + Vite' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.1ms)[0m  [1m[32mINSERT INTO "templates" ("name", "description", "file_structure", "user_id", "is_public", "created_at", "updated_at") VALUES ('React + Vite', 'Modern React application with Vite build tool and Tailwind CSS', '{"package.json":"{\"name\": \"{{project_name}}\", \"version\": \"1.0.0\", \"scripts\": {\"dev\": \"vite\", \"build\": \"vite build\"}}","vite.config.js":"import { defineConfig } from \"vite\"\\nimport react from \"@vitejs/plugin-react\"\\nexport default defineConfig({ plugins: [react()] })","index.html":"<!DOCTYPE html><html><head><title>{{project_name}}</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.jsx\"></script></body></html>","src":{"main.jsx":"import React from \"react\"\\nimport ReactDOM from \"react-dom/client\"\\nimport App from \"./App\"\\nReactDOM.createRoot(document.getElementById(\"root\")).render(<App />)","App.jsx":"export default function App() { return <h1>Hello {{project_name}}!</h1> }"}}', NULL, TRUE, '2026-01-13 20:36:13.451719', '2026-01-13 20:36:13.451719') RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.1ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'Express API' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.8ms)[0m  [1m[32mINSERT INTO "templates" ("name", "description", "file_structure", "user_id", "is_public", "created_at", "updated_at") VALUES ('Express API', 'Node.js Express REST API with basic routing', '{"package.json":"{\"name\": \"{{project_name}}\", \"version\": \"1.0.0\", \"main\": \"index.js\", \"scripts\": {\"start\": \"node index.js\", \"dev\": \"nodemon index.js\"}}","index.js":"const express = require(\"express\")\\nconst app = express()\\napp.use(express.json())\\napp.get(\"/\", (req, res) => res.json({ message: \"Welcome to {{project_name}}\" }))\\napp.listen(3000, () => console.log(\"Server running on port 3000\"))","routes":{".gitkeep":""},"controllers":{".gitkeep":""}}', NULL, TRUE, '2026-01-13 20:36:13.455211', '2026-01-13 20:36:13.455211') RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Load (0.0ms)[0m  [1m[34mSELECT "templates".* FROM "templates" WHERE "templates"."name" = 'Rails API' LIMIT 1 /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Create (0.5ms)[0m  [1m[32mINSERT INTO "templates" ("name", "description", "file_structure", "user_id", "is_public", "created_at", "updated_at") VALUES ('Rails API', 'Ruby on Rails API-only application', '{"Gemfile":"source \"https://rubygems.org\"\\ngem \"rails\", \"~> 8.0\"\\ngem \"sqlite3\"\\ngem \"puma\"","config.ru":"require_relative \"config/environment\"\\nrun Rails.application","app":{"controllers":{"application_controller.rb":"class ApplicationController < ActionController::API\\nend"}},"config":{"application.rb":"require_relative \"boot\"\\nrequire \"rails/all\"\\nmodule {{project_name}}\\n  class Application < Rails::Application\\n    config.api_only = true\\n  end\\nend"}}', NULL, TRUE, '2026-01-13 20:36:13.457723', '2026-01-13 20:36:13.457723') RETURNING "id" /*application='ProjectScaffolder'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ProjectScaffolder'*/[0m
+  [1m[36mTemplate Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "templates" /*application='ProjectScaffolder'*/[0m

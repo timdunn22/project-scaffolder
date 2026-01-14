@@ -1,0 +1,21 @@
+# Render Blueprint for Project Scaffolder Backend
+services:
+  - type: web
+    name: project-scaffolder-api
+    env: ruby
+    buildCommand: bundle install && rails db:migrate && rails db:seed
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: project-scaffolder-db
+          property: connectionString
+
+databases:
+  - name: project-scaffolder-db
+    databaseName: project_scaffolder
+    plan: free
