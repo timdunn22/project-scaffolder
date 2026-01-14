@@ -1,8 +1,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 8.1.2"
-gem "sqlite3", ">= 2.1", group: [:development, :test]
-gem "pg", group: :production
+gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 
 gem "bcrypt", "~> 3.1.7"
